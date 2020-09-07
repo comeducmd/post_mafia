@@ -1,18 +1,3 @@
-/*
-const MongoClient = require("mongodb").MongoClient;
-const MongoURL = "mongodb://127.0.0.1:27017/";
-
-MongoClient.connect(MongoURL, { useUnifiedTopology: true }, (err, db) => {
-    if (err) throw err;
-    console.log("connected to MongoDB");
-
-    // db 상수 선언하기
-    const mafia = db.db("mafia");
-    const users = mafia.collection("users");
-    const messages = mafia.collection("messages");
-    const rooms = mafia.collection("rooms");
-});
-*/
 const express = require("express");
 const http = require("http");
 const app = express();
@@ -34,14 +19,6 @@ server.listen(PORT, () => {
     console.log(`Listening to http://localhost:${PORT}`);
 });
 
+const connect = require("./dbConnect");
 // socket 연결
 require("./socket")(io);
-/*
-io.on("connection", (socket) => {
-    console.log(`+ connection to socket.io : user ${socket.id} in`);
-    io.emit("welcome");
-    socket.on("disconnect", () => {
-        console.log(`user ${socket.id} out`);
-    });
-});
-*/

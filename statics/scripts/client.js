@@ -7,4 +7,3 @@ const init = () => {
     });
 };
 init();
-console.log("client.js connected");

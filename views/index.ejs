@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mafia Main</title>
+</head>
+
+<body>
+    <input type="text" id="username" placeholder="이름 입력" />
+    <div class="roomselection">
+        <h1>방 선택</h1>
+        <% for r in room {%>
+            <input type="radio" name="room" id="<% room[r].id %>" />
+            <% room[r].name %>
+                <%} %>
+                    <button id="roomEnterBtn">Join</button>
+                    <button id="roomCreatBtn">Create</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script type="text/javascript" src="/scripts/client.js"></script>
+</body>
+
+</html>
