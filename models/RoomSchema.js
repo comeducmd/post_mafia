@@ -9,5 +9,5 @@ const RoomSchema = new Schema({
     },
 });
 
-let Room = mongoose.model("room", roomSchema);
-module.exports = Room;
+let RoomModel = mongoose.model("room", RoomSchema);
+module.exports = RoomModel;

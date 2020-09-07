@@ -1,8 +1,24 @@
 const express = require("express");
 const router = express.Router();
+const RoomModel = require("./models/RoomSchema");
 
 router.get("/", (req, res) => {
-    const rooms = res.render("index.ejs");
+    RoomModel.find({}, (err, rooms) => {
+        res.render("index.ejs", { rooms: rooms });
+    });
+});
+
+router.post("/createRoom", (req, res) => {
+    const newRoom = new RoomModel({
+        name: req.body.roomName,
+        members: [],
+    });
+    newRoom.save((err) => {
+        if (err) {
+            console.log(err);
+        }
+        res.redirect("/");
+    });
 });
 
 router.get("/:rk", (req, res) => {

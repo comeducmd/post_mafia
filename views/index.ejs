@@ -5,21 +5,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mafia Main</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
 </head>
 
 <body>
-    <input type="text" id="username" placeholder="이름 입력" />
+    <div class="nameinput">
+        <h1>이름 입력</h1>
+        <input type="text" id="username" placeholder="이름 입력" />
+    </div>
     <div class="roomselection">
         <h1>방 선택</h1>
-        <% for r in room {%>
-            <input type="radio" name="room" id="<% room[r].id %>" />
-            <% room[r].name %>
+        <% for (r in rooms) {%>
+            <input type="radio" name="room" id="<%= rooms[r]._id %>" />
+            <%= rooms[r].name %>
                 <%} %>
                     <button id="roomEnterBtn">Join</button>
-                    <button id="roomCreatBtn">Create</button>
+                    <button id="roomCreatBtn" onclick="document.querySelector(' #modalLayer ').classList.toggle('hidden')">
+        Create
+      </button>
+                    <div id="modalLayer" class="hidden">
+                        <form action="/createRoom" method="post">
+                            <input type="text " name="roomName" placeholder="방 이름 입력 " />
+                            <input type="submit" value="만들기" />
+                        </form>
+                    </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script type="text/javascript" src="/scripts/client.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js "></script>
+    <script type="text/javascript " src="/scripts/client.js "></script>
 </body>
 
 </html>
