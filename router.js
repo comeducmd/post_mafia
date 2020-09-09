@@ -25,8 +25,8 @@ router.get("/:rk", (req, res) => {
     const {
         params: { rk },
     } = req;
-    console.log("roon key :", rk);
-    res.render("wait.html", { room_key: rk });
+    console.log("room key :", rk);
+    res.render("wait.ejs", { room_key: rk });
 });
 
 router.get("/:rk/game", (req, res) => {
