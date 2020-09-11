@@ -2,7 +2,9 @@ const onlineUsers = {};
 
 function disconnectionHandling(socket, io) {
     console.log(`user ${socket.id} out`);
+    const leftroom = onlineUsers[socket.id].roomId;
     delete onlineUsers[socket.id];
+    io.sockets.in(leftroom).emit("userout", socket.id);
 }
 
 function connectionHandling(socket, io) {
