@@ -19,16 +19,12 @@ const init = () => {
     const username = localStorage.getItem("username");
     const roomname = localStorage.getItem("roomname");
     const data = { username: username, roomname: roomname };
-    socket.emit("username", data);
-    //socket.emit("register", localStorage.getItem("socketID"));
-    socket.on("welcome", () => {
-        console.log("hello user");
+    socket.emit("roomenter", data);
+    socket.on("roomgreet", (data) => {
+        console.log(data);
     });
-    socket.on("userenter", function(data) {
-        if (data.result.name.trim() == rk.trim()) {
-            console.log("user entered in this room");
-            makeUsersList(data.result.members);
-        }
+    socket.on("usersList", (data) => {
+        console.log(data);
     });
     socket.on("userout", function(data) {
         console.log(data);
