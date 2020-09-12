@@ -29,11 +29,4 @@ router.get("/:rk", (req, res) => {
     res.render("wait.ejs", { room_key: rk });
 });
 
-router.get("/:rk/game", (req, res) => {
-    const {
-        params: { rk },
-    } = req;
-    res.render("game.html", { room_key: rk });
-});
-
 module.exports = router;

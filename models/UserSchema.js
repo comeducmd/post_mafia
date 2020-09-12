@@ -4,9 +4,6 @@ const UserSchema = new Schema({
     socketID: {
         type: String,
     },
-    roomname: {
-        type: String,
-    },
     username: {
         type: String,
     },
