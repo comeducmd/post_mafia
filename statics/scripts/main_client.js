@@ -1,4 +1,3 @@
-const socket = io("/");
 const roomEnterBtn = document.querySelector("#roomEnterBtn");
 const init = () => {
     roomEnterBtn.addEventListener("click", (event) => {
@@ -13,6 +12,5 @@ const init = () => {
             location.href = `/${roomname}`;
         } else {}
     });
-    // 여기 방 인원을 출력하는 이벤트를 받는 함수를 만들자.
 };
 init();

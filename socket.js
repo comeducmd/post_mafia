@@ -1,11 +1,18 @@
 const onlineUsers = {};
+const RoomModel = require("./models/RoomSchema");
 
 function disconnectionHandling(socket, io) {
-    if (onlineUsers[socket.id] !== null) {
+    if (onlineUsers[socket.id] !== null && onlineUsers[socket.id] !== undefined) {
         console.log(`user ${socket.id} out`);
         const leftroom = onlineUsers[socket.id].roomId;
         delete onlineUsers[socket.id];
         io.sockets.in(leftroom).emit("userout", socket.id);
+        // room의 인원 감소시키기
+        RoomModel.findOne({ name: leftroom }, (err, r) => {
+            const mems = r.members;
+            r.members = mems - 1;
+            r.save();
+        });
     }
 }
 
@@ -20,10 +27,15 @@ function connectionHandling(socket, io) {
         const user = data.username;
         const room = data.roomname;
         socket.join(room);
+        // room의 인원 증가시키기
+        RoomModel.findOne({ name: room }, (err, r) => {
+            const mems = r.members;
+            r.members = mems + 1;
+            r.save();
+        });
         onlineUsers[socket.id] = { roomId: room, username: user };
         io.sockets.in(room).emit("roomgreet", `${user} joined this room(${room})`);
         io.sockets.in(room).emit("usersList", getUsersByRoomId(room));
-        // 첫 페이지에 있는 소켓들에게도 방 정보를 보내자
     });
 }
 

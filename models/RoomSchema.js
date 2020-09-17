@@ -5,7 +5,8 @@ const RoomSchema = new Schema({
         type: String,
     },
     members: {
-        type: Array,
+        type: Number,
+        default: 0,
     },
 });
 

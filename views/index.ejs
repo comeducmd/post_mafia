@@ -18,20 +18,20 @@
         <a href="/">새로고침</a>
         <% for (r in rooms) {%>
             <input type="radio" name="room" id="<%= rooms[r]._id %>" value="<%= rooms[r].name %>" />
-            <%= rooms[r].name %>
-                <%} %>
-                    <button id="roomEnterBtn">Join</button>
-                    <button id="roomCreatBtn" onclick="document.querySelector(' #modalLayer ').classList.toggle('hidden')">
+            <%= rooms[r].name %> (
+                <%= rooms[r].members %>/5)
+                    <%} %>
+                        <button id="roomEnterBtn">Join</button>
+                        <button id="roomCreatBtn" onclick="document.querySelector(' #modalLayer ').classList.toggle('hidden')">
         Create
       </button>
-                    <div id="modalLayer" class="hidden">
-                        <form action="/createRoom" method="post">
-                            <input type="text " name="roomName" placeholder="방 이름 입력 " />
-                            <input type="submit" value="만들기" />
-                        </form>
-                    </div>
+                        <div id="modalLayer" class="hidden">
+                            <form action="/createRoom" method="post">
+                                <input type="text " name="roomName" placeholder="방 이름 입력 " />
+                                <input type="submit" value="만들기" />
+                            </form>
+                        </div>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript " src="/scripts/main_client.js "></script>
 </body>
 

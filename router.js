@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const RoomModel = require("./models/RoomSchema");
+const checkFive = require("./middleware");
 
 router.get("/", (req, res) => {
     RoomModel.find({}, (err, rooms) => {
@@ -11,7 +12,7 @@ router.get("/", (req, res) => {
 router.post("/createRoom", (req, res) => {
     const newRoom = new RoomModel({
         name: req.body.roomName,
-        members: [],
+        members: 0,
     });
     newRoom.save((err) => {
         if (err) {
@@ -21,7 +22,7 @@ router.post("/createRoom", (req, res) => {
     });
 });
 
-router.get("/:rk", (req, res) => {
+router.get("/:rk", checkFive, (req, res) => {
     const {
         params: { rk },
     } = req;
