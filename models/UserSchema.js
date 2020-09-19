@@ -14,6 +14,10 @@ const UserSchema = new Schema({
     isHost: {
         type: Boolean,
     },
+    // connectedRoom: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "room"
+    // },
 });
 
 let User = mongoose.model("User", UserSchema);

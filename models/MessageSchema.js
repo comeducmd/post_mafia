@@ -6,6 +6,8 @@ const MessageSchema = new Schema({
     },
     sender: {
         type: String, //objectID로 받는게 나을까?
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: "User"
     },
 }, {
     timestamps: true,
