@@ -1,13 +1,12 @@
 const express = require("express");
-const http = require("http");
 const app = express();
-const server = http.createServer(app);
+const server = require('http').Server(app);
 const io = require("socket.io")(server);
 const bodyParser = require("body-parser");
 
 // view 방법 지정 & 경로 지정
 app.set("view engine", "ejs");
-app.engine("html", require("ejs").renderFile);
+// app.engine("html", require("ejs").renderFile);
 app.set("views", __dirname + "/views");
 
 // statics 경로 지정
@@ -27,3 +26,14 @@ server.listen(PORT, () => {
 const connect = require("./dbConnect");
 // socket 연결
 require("./socket")(io);
+
+io.on("connection", socket => {
+    socket.on("join-room", (roomId, userId) => {
+        socket.join(roomId);
+        socket.to(roomId).broadcast.emit('user-connected', userId);
+
+        socket.on('disconnect', () => {
+            socket.to(roomId).broadcast.emit('user-disconnected', userId)
+        });
+    })
+})

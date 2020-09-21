@@ -22,6 +22,10 @@ router.post("/createRoom", (req, res) => {
     });
 });
 
+router.get("/:roomID/game", (req, res) => {
+    res.render("game", { roomId: req.params.room });
+});
+
 router.get("/:roomID", checkFive, (req, res) => {
     const {
         params: { roomID },
