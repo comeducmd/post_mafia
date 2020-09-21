@@ -22,12 +22,13 @@ router.post("/createRoom", (req, res) => {
     });
 });
 
-router.get("/:rk", checkFive, (req, res) => {
+router.get("/:roomID", checkFive, (req, res) => {
     const {
-        params: { rk },
+        params: { roomID },
     } = req;
-    console.log("room key :", rk);
-    res.render("wait.ejs", { room_key: rk });
+    console.log("Room ID :", roomID);
+    res.render("wait.ejs", { roomID });
+    console.log(roomID);
 });
 
 module.exports = router;

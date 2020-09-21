@@ -1,5 +1,5 @@
 const socket = io("/");
-const rk = document.querySelector("#rk").textContent;
+const roomID = document.querySelector("#roomID").textContent;
 
 function makeUsersList(members) {
     const userList_ul = document.querySelector("div#userList>ul");

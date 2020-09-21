@@ -2,10 +2,12 @@ const RoomModel = require("./models/RoomSchema");
 
 const checkFive = (req, res, next) => {
     const {
-        params: { rk },
+        params: { roomID },
     } = req;
-    RoomModel.findOne({ name: rk }, (err, room) => {
+    console.log(roomID);
+    RoomModel.findOne({ _ID: roomID }, (err, room) => {
         if(room === null || room === undefined){
+            console.log(roomID);
             res.redirect("/");
         }
         else {
