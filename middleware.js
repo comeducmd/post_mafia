@@ -5,11 +5,16 @@ const checkFive = (req, res, next) => {
         params: { rk },
     } = req;
     RoomModel.findOne({ name: rk }, (err, room) => {
-        const roommb = room.members;
-        if (roommb < 5) {
-            next();
-        } else {
+        if(room === null || room === undefined){
             res.redirect("/");
+        }
+        else {
+            const roommb = room.members;
+            if (roommb < 5) {
+                next();
+            } else {
+                res.redirect("/");
+            }
         }
     });
 };
