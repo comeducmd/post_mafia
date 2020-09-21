@@ -25,17 +25,19 @@ function connectionHandling(socket, io) {
     socket.on("disconnect", () => disconnectionHandling(socket, io));
     socket.on("roomenter", (data) => {
         const user = data.username;
-        const room = data.roomname;
-        socket.join(room);
+        const roomID = data.roomID;
+        socket.join(roomID);
         // room의 인원 증가시키기
-        RoomModel.findOne({ name: room }, (err, r) => {
+        RoomModel.findOne({ _id: roomID }, (err, r) => {
             const mems = r.members;
             r.members = mems + 1;
             r.save();
         });
-        onlineUsers[socket.id] = { roomId: room, username: user };
-        io.sockets.in(room).emit("roomgreet", `${user} joined this room(${room})`);
-        io.sockets.in(room).emit("usersList", getUsersByRoomId(room));
+        onlineUsers[socket.id] = { roomId: roomID, username: user };
+        io.sockets
+            .in(roomID)
+            .emit("roomgreet", `${user} joined this room(${roomID})`);
+        io.sockets.in(roomID).emit("usersList", getUsersByRoomId(roomID));
     });
 }
 

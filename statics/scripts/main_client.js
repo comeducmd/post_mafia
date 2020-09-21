@@ -8,7 +8,7 @@ const init = () => {
         if (username !== "") {
             // 로컬스토리지에 저장하는것 까지만
             localStorage.setItem("username", username);
-            localStorage.setItem("roomname", roomname);
+            localStorage.setItem("roomID", roomID);
 
             location.href = `/${roomID}`;
         } else {}

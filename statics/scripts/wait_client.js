@@ -16,9 +16,10 @@ function makeUsersList(members) {
 }
 
 const init = () => {
+    const startBtn = document.querySelector("#StartBtn");
     const username = localStorage.getItem("username");
-    const roomname = localStorage.getItem("roomname");
-    const data = { username: username, roomname: roomname };
+    const roomID = localStorage.getItem("roomID");
+    const data = { username: username, roomID: roomID };
     socket.emit("roomenter", data);
     socket.on("roomgreet", (data) => {
         console.log(data);
@@ -26,9 +27,13 @@ const init = () => {
     socket.on("usersList", (userlist) => {
         console.log(userlist);
         makeUsersList(userlist);
+        if (userlist.length === 5) {
+            startBtn.disabled = false;
+        }
     });
     socket.on("userout", (sid) => {
         document.getElementById(`user_${sid}`).remove();
+        startBtn.disabled = true;
     });
 };
 init();
