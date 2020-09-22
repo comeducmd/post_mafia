@@ -41,6 +41,11 @@ function connectionHandling(socket, io) {
         io.sockets.in(roomID).emit("roomgreet", `${user} joined this room`);
         io.sockets.in(roomID).emit("usersList", getUsersByRoomId(roomID));
     });
+    socket.on("messageInput", (data) => {
+        io.sockets
+            .in(data.roomID)
+            .emit("messagePrint", `${data.username} said : ${data.message}`);
+    });
 }
 
 module.exports = (io) => {

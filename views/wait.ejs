@@ -4,6 +4,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        p.join {
+            color: grey;
+        }
+        
+        p.leave {
+            color: red;
+        }
+    </style>
     <title>Waiting Room</title>
 </head>
 
@@ -17,7 +26,7 @@
     </div>
     <button id="StartBtn"><a href="<%=roomID%>/game">ㄱㄱㄱ</a></button>
     <div id="MsgLayer"></div>
-    <input placeholder="채팅하세요~">
+    <input id="MsgInput" placeholder="Chat here~" />
     <!-- <button id="StartBtn" disabled="disabled" onclick="location.href='<%=roomID%>'">게임시작</button> -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/scripts/wait_client.js"></script>
