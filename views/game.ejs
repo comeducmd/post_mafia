@@ -34,18 +34,30 @@
             height: 100%;
             object-fit: cover;
         }
+        #bg {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            background: url(/img/bg.jpg) no-repeat center center ;
+            background-size: cover;
+        }
     </style>
 </head>
 <body>
     <div id="video-grid" style="display:none"></div>
+    <canvas id='bg'></canvas>
 
     <script>
+        var canvas = document.querySelector("#bg");
         var scene = new THREE.Scene();
         var aspect = window.innerWidth / window.innerHeight;
         var camera = new THREE.PerspectiveCamera(85, aspect, 0.1, 1000);
         camera.position.set(0, 0, 50);
 
-        var renderer = new THREE.WebGLRenderer();
+        var renderer = new THREE.WebGLRenderer({
+            canvas,
+            alpha: true,
+        });
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(renderer.domElement);
@@ -56,8 +68,8 @@
         // table
         var geometry = new THREE.CylinderGeometry( 20, 20, 2, 80 );
         var material = new THREE.MeshBasicMaterial();
-        material.map = new THREE.ImageUtils.loadTexture('/img/tree.jpg');
-        material.bumpMap = new THREE.ImageUtils.loadTexture('/img/tree.jpg');     
+        material.map = new THREE.ImageUtils.loadTexture('/img/concrete.jpg');
+        material.bumpMap = new THREE.ImageUtils.loadTexture('/img/concrete.jpg');     
         material.bumpScale = 0.05;
         var cylinder = new THREE.Mesh( geometry, material );
         scene.add(cylinder);
@@ -66,6 +78,11 @@
 
         var spotLight = new THREE.SpotLight( 0xffffff );
         spotLight.position.set(-35, 72, 80);
+        spotLight.angle = 0.7;
+        spotLight.indensty = 0.3;
+        spotLight.penumbra = 0.05;
+		spotLight.decay = 2;
+		spotLight.distance = 200;
         scene.add(spotLight);
 
         // orbit controller
