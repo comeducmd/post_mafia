@@ -17,12 +17,16 @@ function makeUsersList(members) {
 
 const init = () => {
     const startBtn = document.querySelector("#StartBtn");
+    const MsgLayer = document.querySelector("#MsgLayer");
     const username = localStorage.getItem("username");
     const roomID = localStorage.getItem("roomID");
     const data = { username: username, roomID: roomID };
     socket.emit("roomenter", data);
     socket.on("roomgreet", (data) => {
         console.log(data);
+        const p = document.createElement("p");
+        p.innerText = data;
+        MsgLayer.appendChild(p);
     });
     socket.on("usersList", (userlist) => {
         console.log(userlist);
@@ -34,6 +38,14 @@ const init = () => {
     socket.on("userout", (sid) => {
         document.getElementById(`user_${sid}`).remove();
         startBtn.disabled = true;
+    });
+    socket.on("roombye", (data) => {
+        setTimeout(() => {
+            const p = document.createElement("p");
+            p.innerText = data;
+            p.style.color = "red";
+            MsgLayer.appendChild(p);
+        }, 6000);
     });
 };
 init();

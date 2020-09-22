@@ -5,13 +5,17 @@ function disconnectionHandling(socket, io) {
     if (onlineUsers[socket.id] !== null && onlineUsers[socket.id] !== undefined) {
         console.log(`user ${socket.id} out`);
         const leftroom = onlineUsers[socket.id].roomId;
+        const leftuser = onlineUsers[socket.id].username;
         delete onlineUsers[socket.id];
+        io.sockets.in(leftroom).emit("roombye", `${leftuser} leaved this room`);
         io.sockets.in(leftroom).emit("userout", socket.id);
         // room의 인원 감소시키기
         RoomModel.findOne({ name: leftroom }, (err, r) => {
-            const mems = r.members;
-            r.members = mems - 1;
-            r.save();
+            if (r === null || r === undefined) {} else {
+                const mems = r.members;
+                r.members = mems - 1;
+                r.save();
+            }
         });
     }
 }
@@ -34,9 +38,7 @@ function connectionHandling(socket, io) {
             r.save();
         });
         onlineUsers[socket.id] = { roomId: roomID, username: user };
-        io.sockets
-            .in(roomID)
-            .emit("roomgreet", `${user} joined this room(${roomID})`);
+        io.sockets.in(roomID).emit("roomgreet", `${user} joined this room`);
         io.sockets.in(roomID).emit("usersList", getUsersByRoomId(roomID));
     });
 }
