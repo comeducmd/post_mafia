@@ -87,6 +87,9 @@
 
         // orbit controller
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.maxPolarAngle = Math.PI * 0.4;
+        controls.minDistance = 20;
+        controls.maxDistance = 50;
         controls.update();        
 
         // 카메라 시작 각도 조절
