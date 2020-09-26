@@ -8,6 +8,10 @@ const RoomSchema = new Schema({
         type: Number,
         default: 0,
     },
+    isRunning: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 let RoomModel = mongoose.model("room", RoomSchema);

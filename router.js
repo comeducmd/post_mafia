@@ -23,7 +23,12 @@ router.post("/createRoom", (req, res) => {
 });
 
 router.get("/:roomID/game", (req, res) => {
-    res.render("game", { roomId: req.params.room });
+    const roomId = req.params.roomID;
+    RoomModel.findOne({ _id: roomId }, (err, room) => {
+        room.isRunning = true;
+        room.save();
+    });
+    res.render("game", { roomId });
 });
 
 router.get("/:roomID", checkFive, (req, res) => {
