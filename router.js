@@ -23,21 +23,31 @@ router.post("/createRoom", (req, res) => {
 });
 
 router.get("/:roomID/game", (req, res) => {
+    const prevURL = req.headers.referer;
     const roomId = req.params.roomID;
-    RoomModel.findOne({ _id: roomId }, (err, room) => {
-        room.isRunning = true;
-        room.save();
-    });
-    res.render("game", { roomId });
+    if (prevURL !== `http://localhost:4200/${roomId}`) {
+        res.redirect("/");
+    } else {
+        RoomModel.findOne({ _id: roomId }, (err, room) => {
+            room.isRunning = true;
+            room.save();
+        });
+        res.render("game", { roomId });
+    }
 });
 
 router.get("/:roomID", checkFive, (req, res) => {
-    const {
-        params: { roomID },
-    } = req;
-    console.log("Room ID :", roomID);
-    res.render("wait.ejs", { roomID });
-    console.log(roomID);
+    const prevURL = req.headers.referer;
+    if (prevURL !== "http://localhost:4200/") {
+        res.redirect("/");
+    } else {
+        const {
+            params: { roomID },
+        } = req;
+        console.log("Room ID :", roomID);
+        res.render("wait.ejs", { roomID });
+        console.log(roomID);
+    }
 });
 
 module.exports = router;

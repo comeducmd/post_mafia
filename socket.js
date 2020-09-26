@@ -25,7 +25,7 @@ function connectionHandling(socket, io) {
     console.log(`+ connection to socket.io : user ${socket.id} in`);
     console.log(`=> ${io.engine.clientsCount} socket(s) connected`);
     loginID.concat(socket.id);
-    //첫 페이지에 접속한 유저에게 방 정보를 보내자
+    //첫 페이지에 접속한 유저에게 방 정보를 보내자 -> 일단 하지 말자
     socket.on("disconnect", () => disconnectionHandling(socket, io));
     socket.on("roomenter", (data) => {
         const user = data.username;
