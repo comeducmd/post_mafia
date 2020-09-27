@@ -3,6 +3,8 @@ const router = express.Router();
 const RoomModel = require("./models/RoomSchema");
 const checkFive = require("./middleware");
 
+const rootURL = "http://localhost:4200/";
+
 router.get("/", (req, res) => {
     RoomModel.find({}, (err, rooms) => {
         res.render("index.ejs", { rooms: rooms });
@@ -25,7 +27,7 @@ router.post("/createRoom", (req, res) => {
 router.get("/:roomID/game", (req, res) => {
     const prevURL = req.headers.referer;
     const roomId = req.params.roomID;
-    if (prevURL !== `http://localhost:4200/${roomId}`) {
+    if (prevURL !== `${rootURL}${roomId}`) {
         res.redirect("/");
     } else {
         RoomModel.findOne({ _id: roomId }, (err, room) => {
@@ -38,7 +40,7 @@ router.get("/:roomID/game", (req, res) => {
 
 router.get("/:roomID", checkFive, (req, res) => {
     const prevURL = req.headers.referer;
-    if (prevURL !== "http://localhost:4200/") {
+    if (prevURL !== rootURL) {
         res.redirect("/");
     } else {
         const {

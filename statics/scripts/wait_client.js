@@ -17,10 +17,13 @@ function makeUsersList(members) {
 
 const MsgLayer = document.querySelector("#MsgLayer");
 
-function addToMsgLayer(message, _class) {
+function addToMsgLayer(message, _class, _id) {
     const p = document.createElement("p");
     p.innerText = message;
     p.className = _class;
+    if (_id !== null) {
+        p.id = _id;
+    }
     MsgLayer.appendChild(p);
 }
 
@@ -32,7 +35,7 @@ const init = () => {
     socket.emit("roomenter", data);
     socket.on("roomgreet", (data) => {
         console.log(data);
-        addToMsgLayer(data, "join");
+        addToMsgLayer(data, "join", null);
     });
     socket.on("usersList", (userlist) => {
         console.log(userlist);
@@ -64,7 +67,7 @@ const init = () => {
         }
     });
     socket.on("messagePrint", (data) => {
-        addToMsgLayer(data, "message");
+        addToMsgLayer(data, "message", null);
     });
 };
 init();
