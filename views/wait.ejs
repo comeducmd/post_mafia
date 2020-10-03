@@ -25,11 +25,17 @@
         <ul></ul>
     </div>
     <button id="StartBtn"><a href="<%=roomID%>/game">ㄱㄱㄱ</a></button>
+    <% for (m in msg) {%>
+        <div>
+            <%= msg[m].sender %> said : <%= msg[m].message %>
+        </div>
+    <%}%>
     <div id="MsgLayer"></div>
     <input id="MsgInput" placeholder="Chat here~" />
     <!-- <button id="StartBtn" disabled="disabled" onclick="location.href='<%=roomID%>'">게임시작</button> -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/scripts/wait_client.js"></script>
+    <script src="/scripts/jquery-3.5.1.js"></script>
 </body>
 
 </html>

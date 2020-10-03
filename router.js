@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const RoomModel = require("./models/RoomSchema");
+const MessageModel = require("./models/MessageSchema");
 const checkFive = require("./middleware");
 
 const rootURL = "http://localhost:4200/";
@@ -24,6 +25,20 @@ router.post("/createRoom", (req, res) => {
     });
 });
 
+router.post("/message", (req, res) => {
+    const {
+        body: { data }
+    } = req;
+
+    const newMsg = MessageModel.create({
+        message: data.message,
+        roomID: data.roomID,
+        sender: data.sender
+    });
+
+    res.send();
+})
+
 router.get("/:roomID/game", (req, res) => {
     const prevURL = req.headers.referer;
     const roomId = req.params.roomID;
@@ -38,7 +53,7 @@ router.get("/:roomID/game", (req, res) => {
     }
 });
 
-router.get("/:roomID", checkFive, (req, res) => {
+router.get("/:roomID", checkFive, async (req, res) => {
     const prevURL = req.headers.referer;
     if (prevURL !== rootURL) {
         res.redirect("/");
@@ -47,8 +62,14 @@ router.get("/:roomID", checkFive, (req, res) => {
             params: { roomID },
         } = req;
         console.log("Room ID :", roomID);
-        res.render("wait.ejs", { roomID });
-        console.log(roomID);
+
+        try {
+            const msg = await MessageModel.find({roomID:roomID}).sort({createdAt:1});
+            res.render("wait.ejs", { roomID ,msg });
+        } catch (error) {
+            res.render("wait.ejs", { roomID ,msg : []});
+        }
+        
     }
 });
 

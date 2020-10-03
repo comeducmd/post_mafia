@@ -4,6 +4,9 @@ const MessageSchema = new Schema({
     message: {
         type: String,
     },
+    roomID: {
+        type: String,
+    },
     sender: {
         type: String, //objectID로 받는게 나을까?
         // type: mongoose.Schema.Types.ObjectId,
@@ -13,5 +16,5 @@ const MessageSchema = new Schema({
     timestamps: true,
 });
 
-let Message = mongoose.model("Message", MessageSchema);
-module.exports = Message;
+let MessageModel = mongoose.model("Message", MessageSchema);
+module.exports = MessageModel;
