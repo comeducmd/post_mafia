@@ -60,6 +60,25 @@ const init = () => {
                 username,
             });
             MsgInput.value = "";
+
+            let msgData = {
+                'message': message,
+                'roomID': roomID,
+                'sender': username
+            };
+            $.ajax({
+                url: `/message`,
+                dataType: 'text',
+                type: 'POST',
+                data: {data:msgData},
+                error: function(){
+                    console.log('error');
+                },
+                success : function() {
+                    console.log('success');
+                }
+            });
+
             e.preventDefault;
         }
     });
