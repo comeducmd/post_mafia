@@ -15,6 +15,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.min.js"></script>
     <script src='http://threejs.org/examples/js/controls/OrbitControls.js'></script>
+    <script src='https://threejs.org/examples/js/loaders/OBJLoader.js'></script>
+    <script src='https://threejs.org/examples/js/loaders/MTLLoader.js'></script>
     <script src="/scripts/threex.domevents.js"></script>
     <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <script src="/socket.io/socket.io.js" defer></script>
@@ -34,30 +36,18 @@
             height: 100%;
             object-fit: cover;
         }
-        #bg {
-            width: 100vw;
-            height: 100vh;
-            display: block;
-            background: url(/img/bg.jpg) no-repeat center center ;
-            background-size: cover;
-        }
     </style>
 </head>
 <body>
     <div id="video-grid" style="display:none"></div>
-    <canvas id='bg'></canvas>
 
     <script>
-        var canvas = document.querySelector("#bg");
         var scene = new THREE.Scene();
         var aspect = window.innerWidth / window.innerHeight;
         var camera = new THREE.PerspectiveCamera(85, aspect, 0.1, 1000);
         camera.position.set(0, 0, 50);
 
-        var renderer = new THREE.WebGLRenderer({
-            canvas,
-            alpha: true,
-        });
+        var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(renderer.domElement);
@@ -65,16 +55,47 @@
         // Event listener
         var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 
-        // table
-        var geometry = new THREE.CylinderGeometry( 20, 20, 2, 80 );
-        var material = new THREE.MeshBasicMaterial();
-        material.map = new THREE.ImageUtils.loadTexture('/img/concrete.jpg');
-        material.bumpMap = new THREE.ImageUtils.loadTexture('/img/concrete.jpg');     
-        material.bumpScale = 0.05;
-        var cylinder = new THREE.Mesh( geometry, material );
-        scene.add(cylinder);
-
+        // room
+        var imageLoader = new THREE.TextureLoader();
+        imageLoader.load("/img/side.jpg", data => {
+            var material_room = new THREE.MeshBasicMaterial({
+                map: data,
+                side: THREE.BackSide
+            })
+            var geometry_room = new THREE.BoxGeometry(300, 100, 300);
+            var boxMesh = new THREE.Mesh(geometry_room, material_room);
+            boxMesh.position.y += 32;
+            scene.add(boxMesh)
+        });
         
+        function loadTableOBJ(materials) {
+            var loader = new THREE.OBJLoader();
+            loader.setMaterials(materials);
+            console.log(materials);
+            loader.load('/obj/table.obj', function (obj) {
+                obj.rotation.x -= Math.PI/2;
+                obj.position.y = -13;
+                obj.scale.set(0.38, 0.38, 0.38);
+                scene.add(obj);
+                }, function(xhr) {
+                    console.log('OBJLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
+                }, function(error) {
+                    console.log(error);
+                }
+            );
+        }
+        function loadTableMTL() {
+            mtlLoader = new THREE.MTLLoader();
+            mtlLoader.load('/obj/table.mtl', function (materials) {
+                materials.preload();
+                loadTableOBJ(materials);
+            }, function (xhr) {
+                console.log('MTLLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
+            }, function (error) {
+                console.error(error);
+            });
+        }
+        loadTableMTL();
 
         var spotLight = new THREE.SpotLight( 0xffffff );
         spotLight.position.set(-35, 72, 80);
@@ -88,12 +109,12 @@
         // orbit controller
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.maxPolarAngle = Math.PI * 0.4;
-        controls.minDistance = 20;
+        controls.minDistance = 10;
         controls.maxDistance = 50;
         controls.update();        
 
         // 카메라 시작 각도 조절
-        camera.position.set( 0, 10, 20);
+        camera.position.set( 0, 10, 40);
         camera.lookAt(scene.position);
         camera.up.set(0, 1, 0);
         camera.updateProjectionMatrix();
