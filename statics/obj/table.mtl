@@ -1,0 +1,26 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 07.04.2017 12:31:31
+
+newmtl Roche_Bobois_Evol_Table_110_mat3_mtl_1
+	Ns 10.0000
+	Ni 1.5000
+	d 0.2340
+	Tr 0.7660
+	Tf 0.2340 0.2340 0.2340 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.7490 0.7725 0.7765
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Roche_Bobois_Evol_Table_110_mat3_mtl_2
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.0000 0.0000 0.0000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
