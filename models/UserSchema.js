@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const UserSchema = new Schema({
-    socketID: {
-        type: String,
-    },
+    //socketID: {
+    //    type: String,
+    //},
     username: {
         type: String,
     },
@@ -20,5 +20,5 @@ const UserSchema = new Schema({
     // },
 });
 
-let User = mongoose.model("User", UserSchema);
-module.exports = User;
+let UserModel = mongoose.model("User", UserSchema);
+module.exports = UserModel;

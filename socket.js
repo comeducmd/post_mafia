@@ -1,5 +1,6 @@
 const onlineUsers = {};
 const RoomModel = require("./models/RoomSchema");
+const UserModel = require("./models/UserSchema");
 
 function disconnectionHandling(socket, io) {
     if (onlineUsers[socket.id] !== null && onlineUsers[socket.id] !== undefined) {
@@ -37,6 +38,7 @@ function connectionHandling(socket, io) {
             r.members = mems + 1;
             r.save();
         });
+
         onlineUsers[socket.id] = { roomId: roomID, username: user };
         io.sockets.in(roomID).emit("roomgreet", `${user} joined this room`);
         io.sockets.in(roomID).emit("usersList", getUsersByRoomId(roomID));

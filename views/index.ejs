@@ -12,8 +12,9 @@
     <div class="nameinput">
         <h1>이름 입력</h1>
         <input type="text" id="username" placeholder="이름 입력" />
+        <button id="nameEnterBtn">이름 입력</button>
     </div>
-    <div class="roomselection">
+    <div class="roomselection" style="display: none;">
         <h1>방 선택</h1>
         <a href="/">새로고침</a>
         <% for (r in rooms) {%>
@@ -25,8 +26,8 @@
                             <%} %>
                                 <button id="roomEnterBtn">Join</button>
                                 <button id="roomCreatBtn" onclick="document.querySelector(' #modalLayer ').classList.toggle('hidden')">
-        Create
-      </button>
+      Create
+    </button>
                                 <div id="modalLayer" class="hidden">
                                     <form action="/createRoom" method="post">
                                         <input type="text " name="roomName" placeholder="방 이름 입력 " />
