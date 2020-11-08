@@ -11,7 +11,7 @@ function disconnectionHandling(socket, io) {
         io.sockets.in(leftroom).emit("roombye", `${leftuser} leaved this room`);
         io.sockets.in(leftroom).emit("userout", socket.id);
         // room의 인원 감소시키기
-        RoomModel.findOne({ name: leftroom }, (err, r) => {
+        RoomModel.findOne({ _id: leftroom }, (err, r) => {
             if (r === null || r === undefined) {} else {
                 const mems = r.members;
                 r.members = mems - 1;
