@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { height:100%; width: 100%; }
         p.join {
             color: grey;
         }
@@ -12,11 +14,23 @@
         p.leave {
             color: red;
         }
+        .wating-form {
+            position:absolute;
+            background-color: whitesmoke;
+            border: 1px black solid;
+            z-index: 5;
+            width: 500px;
+            height: 600px;
+        }
     </style>
     <title>Waiting Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.min.js"></script>
+    <script src="https://threejs.org/build/three.min.js"></script>
 </head>
 
 <body>
+    <div class="wating-form">
     <h1>
         Room ID :
         <span id="roomID"> <%= roomID %> </span>
@@ -33,6 +47,57 @@
     <div id="MsgLayer"></div>
     <input id="MsgInput" placeholder="Chat here~" />
     <!-- <button id="StartBtn" disabled="disabled" onclick="location.href='<%=roomID%>'">게임시작</button> -->
+    </div>
+
+    <script>
+        var scene = new THREE.Scene();
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 10000 );
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var galaxy_geometry = new THREE.SphereGeometry(400, 32, 32);
+        var galaxy_material = new THREE.MeshBasicMaterial();
+        galaxy_material.map = new THREE.ImageUtils.loadTexture('img/galaxy.png');
+        galaxy_material.side = THREE.BackSide
+        var galaxy = new THREE.Mesh( galaxy_geometry, galaxy_material );
+        scene.add(galaxy);
+
+        camera.position.set( -100, 50, 150 );
+        camera.lookAt(scene.position);
+        camera.up.set(0, 1, 0);
+        camera.updateProjectionMatrix();
+
+        scene.add( new THREE.AmbientLight( 0x666666 ) );
+        var light = new THREE.DirectionalLight( 0xdfebff, 1 );
+        light.position.set( 50, 200, 100 );
+        light.position.multiplyScalar( 1.3 );
+        light.castShadow = true;
+        light.shadow.mapSize.width = 1024;
+        light.shadow.mapSize.height = 1024;
+        var d = 300;
+        light.shadow.camera.left = - d;
+        light.shadow.camera.right = d;
+        light.shadow.camera.top = d;
+        light.shadow.camera.bottom = - d;
+        light.shadow.camera.far = 1000;
+        scene.add( light );
+
+        function render(time) {
+            time *= 0.0002;
+            g_time = time * 0.1;
+            galaxy.rotation.y = g_time;
+
+            requestAnimationFrame( render );
+            renderer.render( scene, camera );
+        }
+
+        render();
+    </script>
+
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/scripts/wait_client.js"></script>
     <script src="/scripts/jquery-3.5.1.js"></script>
