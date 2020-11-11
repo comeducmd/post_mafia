@@ -1,8 +1,18 @@
+body { margin: 0; overflow: hidden; }
+canvas { height:100%; width: 100%; }
 #modalLayer {
     position: absolute;
     right: 0;
 }
-
 .hidden {
     display: none;
+}
+.connect-form {
+    position:absolute;
+    background-color: whitesmoke;
+    border: 1px black solid;
+    right:0;
+    z-index: 5;
+    width: 500px;
+    height: 600px;
 }
