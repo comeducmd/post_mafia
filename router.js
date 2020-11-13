@@ -14,16 +14,13 @@ router.get("/", (req, res) => {
 });
 
 router.post("/createRoom", (req, res) => {
-    const newRoom = new RoomModel({
-        name: req.body.roomName,
-        members: 0,
-    });
-    newRoom.save((err) => {
-        if (err) {
-            console.log(err);
-        }
-        res.redirect("/");
-    });
+    const {
+        body: { data },
+    } = req;
+    const newRoom = RoomModel.create({
+        name: data.roomname
+    })
+    res.redirect("/");
 });
 
 router.post("/message", (req, res) => {

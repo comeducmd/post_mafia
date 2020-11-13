@@ -35,5 +35,28 @@ const init = () => {
         location.href = `/${roomID}`;
         //} else {}
     });
+
+    const roomCreateBtn = document.querySelector("#newroomsubmit");
+    roomCreateBtn.addEventListener("click", (e) => {
+        const newroomname = document.querySelector("#newroomname").value;
+        let newRoomData = {
+            'roomname': newroomname,
+        }
+        $.ajax({
+            url: '/createRoom',
+            dataType: 'text',
+            type: 'POST',
+            data: { data: newRoomData },
+            error: function() {
+                console.log("error. 다시 짜라.");
+            },
+            success: function() {
+                console.log("success");
+                location.href = "/"
+            }
+        })
+        e.preventDefault
+    })
 };
+
 init();
