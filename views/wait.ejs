@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { height:100%; width: 100%; }
         p.join {
             color: grey;
         }
@@ -12,11 +14,30 @@
         p.leave {
             color: red;
         }
+        .wating-form {
+            position:absolute;
+            background-color: whitesmoke;
+            border: 1px black solid;
+            z-index: 5;
+            right:0;
+            width: 500px;
+            height: 600px;
+        }
     </style>
     <title>Waiting Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.min.js"></script>
+    <script src="https://threejs.org/build/three.min.js"></script>
+    <script src='https://threejs.org/examples/js/controls/OrbitControls.js'></script>
+    <script src='https://threejs.org/examples/js/controls/FirstPersonControls.js'></script>
+    <script src='https://threejs.org/examples/js/loaders/OBJLoader.js'></script>
+    <script src='https://threejs.org/examples/js/loaders/MTLLoader.js'></script>
+    <script src='https://threejs.org/examples/js/objects/Sky.js'></script>
+    <script src="scripts/threex.domevents.js"></script>
 </head>
 
 <body>
+    <div class="wating-form">
     <h1>
         Room ID :
         <span id="roomID"> <%= roomID %> </span>
@@ -33,6 +54,173 @@
     <div id="MsgLayer"></div>
     <input id="MsgInput" placeholder="Chat here~" />
     <!-- <button id="StartBtn" disabled="disabled" onclick="location.href='<%=roomID%>'">게임시작</button> -->
+    </div>
+
+    <script>
+        var scene = new THREE.Scene();
+        var aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 20000 );
+        var clock = new THREE.Clock();
+        
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight * 1.05);
+        document.body.appendChild(renderer.domElement);
+
+        var sky = new THREE.Sky();
+		sky.scale.setScalar( 450000 );
+        scene.add( sky );
+        
+        var sun = new THREE.Vector3();
+        var effectController = {
+            turbidity: 10,
+            rayleigh: 3,
+            mieCoefficient: 0.03,
+            mieDirectionalG: 0.99995,
+            inclination: 0.49, // elevation / inclination
+            azimuth: 0.25, // Facing front,
+            exposure: renderer.toneMappingExposure
+        };
+        function viewSky() {
+
+            var uniforms = sky.material.uniforms;
+            uniforms[ "turbidity" ].value = effectController.turbidity;
+            uniforms[ "rayleigh" ].value = effectController.rayleigh;
+            uniforms[ "mieCoefficient" ].value = effectController.mieCoefficient;
+            uniforms[ "mieDirectionalG" ].value = effectController.mieDirectionalG;
+
+            var theta = Math.PI * ( effectController.inclination - 0.5 );
+            var phi = 2 * Math.PI * ( effectController.azimuth - 0.5 );
+
+            sun.x = Math.cos( phi );
+            sun.y = Math.sin( phi ) * Math.sin( theta );
+            sun.z = Math.sin( phi ) * Math.cos( theta );
+
+            uniforms[ "sunPosition" ].value.copy( sun );
+
+            renderer.toneMappingExposure = effectController.exposure;
+            renderer.render( scene, camera );
+        } 
+        viewSky();
+
+        function loadGroundOBJ() {
+            var loader = new THREE.OBJLoader();
+            loader.load('obj/mars/mars.obj', function (obj) {
+                obj.rotation.x -= Math.PI/2;
+                obj.position.y = -12;
+
+                var texture = new THREE.TextureLoader().load('obj/mars/diffuse.png');
+                obj.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.material.map = texture;
+                    }
+                });
+                scene.add(obj);
+                }, function(xhr) {
+                    console.log('Ground OBJLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
+                }, function(error) {
+                    console.log(error);
+                }
+            );
+        }
+
+        function loadSpaceshipOBJ(materials) {
+            var loader = new THREE.OBJLoader();
+            loader.setMaterials(materials);
+            console.log(materials);
+            loader.load('obj/spaceship/spaceship.obj', function (obj) {
+                obj.rotation.z += Math.PI/2;
+                obj.scale.set(6,6,6);
+                scene.add(obj);
+                }, function(xhr) {
+                    console.log('Spaceship OBJLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
+                }, function(error) {
+                    console.log(error);
+                }
+            );
+        }
+        function loadSpaceshipMTL() {
+            mtlLoader = new THREE.MTLLoader();
+            mtlLoader.load('obj/spaceship/spaceship.mtl', function (materials) {
+                materials.preload();
+                loadSpaceshipOBJ(materials);
+            }, function (xhr) {
+                console.log('Spaceship MTLLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
+            }, function (error) {
+                console.error(error);
+            });
+        }
+
+        loadSpaceshipMTL();
+        loadGroundOBJ()
+
+        // person controller
+        var controls = new THREE.FirstPersonControls( camera, renderer.domElement );
+        controls.movementSpeed = 250;
+        controls.lookSpeed = 0.100;
+        controls.lookVertical = true;
+        controls.verticalMax = Math.PI/3;
+        controls.heightMax = 0.1;
+        
+        camera.position.set( 80, 100, 150 );
+        camera.lookAt(scene.position);
+        camera.up.set(0, 1, 0);
+        camera.updateProjectionMatrix();
+
+        scene.add( new THREE.AmbientLight( 0x666666 ) );
+        var light = new THREE.DirectionalLight( 0xdfebff, 1 );
+        light.position.set( 50, 200, 100 );
+        light.position.multiplyScalar( 1.3 );
+        light.castShadow = true;
+        light.shadow.mapSize.width = 1024;
+        light.shadow.mapSize.height = 1024;
+        var d = 300;
+        light.shadow.camera.left = - d;
+        light.shadow.camera.right = d;
+        light.shadow.camera.top = d;
+        light.shadow.camera.bottom = - d;
+        light.shadow.camera.far = 1000;
+        scene.add( light );
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            controls.handleResize();
+        }
+
+        function limitCameraPosition() {
+            if (camera.position.x > 600) {
+                camera.position.x = 600;
+            }
+            if (camera.position.x < -600) {
+                camera.position.x = -600;
+            }
+            if (camera.position.z > 600) {
+                camera.position.z = 600;
+            }
+            if (camera.position.z < -600) {
+                camera.position.z = -600;
+            }
+            if (camera.position.y > 250) {
+                camera.position.y = 250;
+            }
+            if (camera.position.y < 3) {
+                camera.position.y = 3;
+            }
+        }
+
+        function render() {
+            requestAnimationFrame( render );
+            // controls.update();
+            window.addEventListener( 'resize', onWindowResize, true );
+            controls.update( clock.getDelta());
+            limitCameraPosition();
+            renderer.render( scene, camera );
+        }
+
+        render();
+    </script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/scripts/wait_client.js"></script>
     <script src="/scripts/jquery-3.5.1.js"></script>
