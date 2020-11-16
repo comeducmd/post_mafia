@@ -68,7 +68,7 @@
         var galaxy = new THREE.Mesh(galaxy_geometry, galaxy_material);
         scene.add(galaxy);
 
-        var mars_geometry = new THREE.SphereGeometry(20, 32, 32)
+        var mars_geometry = new THREE.SphereGeometry(20, 32, 32);
         var mars_material = new THREE.MeshBasicMaterial();
         mars_material.map = new THREE.ImageUtils.loadTexture('img/marsmap1k.jpg');
         mars_material.bumpMap = new THREE.ImageUtils.loadTexture('img/marsbump1k.jpg');
@@ -108,11 +108,13 @@
         function render(time) {
             time *= 0.0002;
             g_time = time * 0.1;
-            galaxy.rotation.y = g_time;
             mars.rotation.y = time;
+            galaxy.rotation.y = g_time;
 
             requestAnimationFrame(render);
             controls.update();
+            camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.render(scene, camera);
         }
