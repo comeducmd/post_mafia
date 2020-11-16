@@ -215,6 +215,7 @@
             window.addEventListener( 'resize', onWindowResize, true );
             controls.update( clock.getDelta());
             limitCameraPosition();
+            renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.render( scene, camera );
         }
 

@@ -320,6 +320,7 @@
             init();
             requestAnimationFrame( render );
             controls.update();
+            renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.render( scene, camera );
         }
 
