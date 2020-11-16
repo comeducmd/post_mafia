@@ -1,5 +1,30 @@
-body { margin: 0; overflow: hidden; }
-canvas { height:100%; width: 100%; }
+/**** common ****/
+body { 
+    margin: 0; 
+    overflow: hidden; 
+    font-family: 'NanumSquare'; 
+    /* font-weight: 400; Regular(400), Bold(700), Extra Bold(800), Light(300)*/
+    color:white; 
+}
+canvas { 
+    height:100%; 
+    width: 100%; 
+}
+
+/**** scroll bar UI ****/
+::-webkit-scrollbar{
+    width:10px;
+}
+::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.13);
+    border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+/**** index.ejs ****/
 #modalLayer {
     position: absolute;
     right: 0;
@@ -7,12 +32,116 @@ canvas { height:100%; width: 100%; }
 .hidden {
     display: none;
 }
-.connect-form {
+.nameinput {
     position:absolute;
-    background-color: whitesmoke;
-    border: 1px black solid;
+    background-color: transparent;
+    border: 1px transparent solid;
     right:0;
     z-index: 5;
+    top : 40%;
     width: 500px;
     height: 600px;
+    font-size: 1.3rem;
 }
+#username{
+    background-color: transparent;
+    border:transparent;   
+    outline:none;
+    border-bottom:1px solid white;
+    color: white;
+    font-size: 1rem;
+}
+#username::placeholder{
+    color : rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+.roomselection{
+    position:absolute;
+    background-color: transparent;
+    border: 1px transparent solid;
+    right:0;
+    z-index: 5;
+    top : 30%;
+    width: 50%;
+    min-width: 500px;
+    height: 600px;
+    font-size: 1.45rem;
+    padding-right:10%;
+}
+#un{
+    font-size: 1.9rem;
+}
+#h3_roomList{
+    background-color: rgba(255, 255, 255, 0.158);
+    width:58%;
+    max-width: 280px;
+    padding:1%;
+    float:left;
+}
+#reloadBtn{
+    background: url( "../img/refresh.png" ) no-repeat;
+    border: none;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;    
+}
+#roomList{
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size:1.1rem;
+    width:90%;
+    overflow:auto;
+    height: 30%;
+    
+}
+#roomBtn{
+    
+}
+
+
+/**** wait.ejs ****/
+p.join {
+    color: grey;
+}
+p.leave {
+    color: red;
+}
+.waiting-form {
+    position:absolute;
+    background-color: rgba(255, 255, 255, 0.096);
+    border: 1px transparent solid;
+    z-index: 5;
+    right:0;
+    width: 40%;
+    height: 60%;
+    padding: 3%;
+    overflow: auto;
+    min-width: 400px;
+}
+.entire_chatting{
+    padding-top: 5%;
+    height: 50%;
+    overflow:auto;
+}
+/* scroll bar UI */
+.entire_chatting::-webkit-scrollbar{
+    width:8px;
+}
+
+#MsgInput{
+    padding-top:3%;
+    background-color: transparent;
+    border:1px rgba(255, 255, 255, 0.6);   
+    outline:none;
+    border-bottom:1px solid white;
+    width:90%;
+    color:white;
+}
+#MsgInput::placeholder{
+    color : rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+#MsgLayer{
+    padding-top:3%;
+}
+
+/*기존 채팅 이력 위에 올라오고, joined 그 다음에 떠야함 */

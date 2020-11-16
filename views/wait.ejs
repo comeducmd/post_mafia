@@ -4,26 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { height:100%; width: 100%; }
-        p.join {
-            color: grey;
-        }
-        
-        p.leave {
-            color: red;
-        }
-        .wating-form {
-            position:absolute;
-            background-color: whitesmoke;
-            border: 1px black solid;
-            z-index: 5;
-            right:0;
-            width: 500px;
-            height: 600px;
-        }
-    </style>
+    <link rel="stylesheet" href="stylesheets/style.css"/>
+    
     <title>Waiting Room</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.min.js"></script>
@@ -37,23 +19,29 @@
 </head>
 
 <body>
-    <div class="wating-form">
-    <h1>
-        Room ID :
-        <span id="roomID"> <%= roomID %> </span>
-    </h1>
-    <div id="userList">
-        <ul></ul>
-    </div>
-    <button id="StartBtn"><a href="<%=roomID%>/game">ㄱㄱㄱ</a></button>
-    <% for (m in msg) {%>
-        <div>
-            <%= msg[m].sender %> said : <%= msg[m].message %>
+    <div class="waiting-form">
+        <div id="roomID">
+            <h2>
+                Room ID :
+                <span id="roomID"> <%= roomID %> </span>
+            </h2>
         </div>
-    <%}%>
-    <div id="MsgLayer"></div>
-    <input id="MsgInput" placeholder="Chat here~" />
-    <!-- <button id="StartBtn" disabled="disabled" onclick="location.href='<%=roomID%>'">게임시작</button> -->
+        <div id="userList">
+            <p>Waiting for other users</p>
+            <ul></ul>
+        </div>
+        <button id="StartBtn"><a href="<%=roomID%>/game">Start game</a></button>
+        <input id="MsgInput" placeholder="Chat here" />
+        <div class="entire_chatting">
+            <% for (m in msg) {%>
+            <div id="chatlog">
+                <%= msg[m].sender %> said : <%= msg[m].message %>
+            </div>
+            <%}%>
+        </div>
+        <div id="MsgLayer">
+        </div>
+            <!-- <button id="StartBtn" disabled="disabled" onclick="location.href='<%=roomID%>'">게임시작</button> -->
     </div>
 
     <script>

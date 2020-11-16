@@ -21,25 +21,34 @@
         </div>
 
         <div class="roomselection" style="display: none;">
-            <h1>환영합니다, <span id="un"></span>님!</h1>
+            <h2>환영합니다, <span id="un"></span> 님!</h2>
             <button id="nameChangeBtn">이름 바꾸기</button>
-            <h1>방 선택</h1>
-            <a href="/">새로고침</a>
-            <% for (r in rooms) {%>
-                <% if ((rooms[r].isRunning)===false) {%>
-                    <input type="radio" name="room" id="<%= rooms[r]._id %>" value="<%= rooms[r].name %>" />
-                    <%= rooms[r].name %> (
-                        <%= rooms[r].members %>/5)
-                            <%} %>
+            <h3 id="h3_roomList">현재 입장 가능한 방 목록</h3>
+            <input type="button" id="reloadBtn" href="/">
+            
+            <div id='roomBtn'>
+                <button id="roomEnterBtn">Join</button>
+                <button id="roomCreatBtn" onclick="document.querySelector(' #modalLayer ').classList.toggle('hidden')">Create</button>
+            </div>
+
+            <div id="roomList">
+                <% for (r in rooms) {%>
+                    <% if ((rooms[r].isRunning)===false) {%>
+                        <div id='EachRoom'>
+                            <input type="radio" name="room" id="<%= rooms[r]._id %>" value="<%= rooms[r].name %>" />
+                        <%= rooms[r].name %> (
+                            <%= rooms[r].members %>/5)
                                 <%} %>
-                                    <button id="roomEnterBtn">Join</button>
-                                    <button id="roomCreatBtn" onclick="document.querySelector(' #modalLayer ').classList.toggle('hidden')">
-          Create
-        </button>
-                                    <div id="modalLayer" class="hidden">
-                                        <input id="newroomname" type="text " name="roomName" placeholder="방 이름 입력 " />
-                                        <input id="newroomsubmit" type="submit" value="만들기" />
-                                    </div>
+                                    <%} %>
+                        </div>  
+            </div>
+            
+            
+                                    
+            <div id="modalLayer" class="hidden">
+                <input id="newroomname" type="text " name="roomName" placeholder="방 이름 입력 " />
+                <input id="newroomsubmit" type="submit" value="만들기" />
+            </div>
         </div>
     </div>
 
