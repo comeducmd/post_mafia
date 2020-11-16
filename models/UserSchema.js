@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const UserSchema = new Schema({
-    //socketID: {
-    //    type: String,
-    //},
+    socketID: {
+        type: String,
+    },
     username: {
         type: String,
     },
@@ -11,13 +11,17 @@ const UserSchema = new Schema({
         type: String,
         default: null,
     },
-    isHost: {
+    //isHost: {
+    //    type: Boolean,
+    //},
+    //connectedRoom: {
+    //    type: mongoose.Schema.Types.ObjectId,
+    //    ref: "room"
+    //},
+    isAlive: {
         type: Boolean,
-    },
-    // connectedRoom: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "room"
-    // },
+        default: true
+    }
 });
 
 let UserModel = mongoose.model("User", UserSchema);

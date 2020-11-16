@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,16 +21,26 @@
     <script src="/scripts/threex.domevents.js"></script>
     <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <script src="/socket.io/socket.io.js" defer></script>
+    <script src="/scripts/jquery-3.5.1.js"></script>
     <script src="/scripts/game_client.js" defer></script>
     <title>Mafia</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { width: 100%; height: 100% }
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+        
         #video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, 300px);
             grid-auto-rows: 300px;
         }
+        
         video {
             width: 100%;
             height: 100%;
@@ -37,6 +48,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="video-grid" style="display:none"></div>
 
@@ -66,43 +78,43 @@
             boxMesh.position.y += 32;
             scene.add(boxMesh)
         });
-        
+
         function loadTableOBJ(materials) {
             var loader = new THREE.OBJLoader();
             loader.setMaterials(materials);
             console.log(materials);
-            loader.load('/obj/table.obj', function (obj) {
-                obj.rotation.x -= Math.PI/2;
+            loader.load('/obj/table.obj', function(obj) {
+                obj.rotation.x -= Math.PI / 2;
                 obj.position.y = -13;
                 obj.scale.set(0.38, 0.38, 0.38);
                 scene.add(obj);
-                }, function(xhr) {
-                    console.log('OBJLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
-                }, function(error) {
-                    console.log(error);
-                }
-            );
+            }, function(xhr) {
+                console.log('OBJLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
+            }, function(error) {
+                console.log(error);
+            });
         }
+
         function loadTableMTL() {
             mtlLoader = new THREE.MTLLoader();
-            mtlLoader.load('/obj/table.mtl', function (materials) {
+            mtlLoader.load('/obj/table.mtl', function(materials) {
                 materials.preload();
                 loadTableOBJ(materials);
-            }, function (xhr) {
+            }, function(xhr) {
                 console.log('MTLLoader: ', xhr.loaded / xhr.total * 100, '% loaded');
-            }, function (error) {
+            }, function(error) {
                 console.error(error);
             });
         }
         loadTableMTL();
 
-        var spotLight = new THREE.SpotLight( 0xffffff );
+        var spotLight = new THREE.SpotLight(0xffffff);
         spotLight.position.set(-35, 72, 80);
         spotLight.angle = 0.7;
         spotLight.indensty = 0.3;
         spotLight.penumbra = 0.05;
-		spotLight.decay = 2;
-		spotLight.distance = 200;
+        spotLight.decay = 2;
+        spotLight.distance = 200;
         scene.add(spotLight);
 
         // orbit controller
@@ -110,80 +122,92 @@
         controls.maxPolarAngle = Math.PI * 0.4;
         controls.minDistance = 10;
         controls.maxDistance = 50;
-        controls.update();        
+        controls.update();
 
         // 카메라 시작 각도 조절
-        camera.position.set( 0, 10, 40);
+        camera.position.set(0, 10, 40);
         camera.lookAt(scene.position);
         camera.up.set(0, 1, 0);
         camera.updateProjectionMatrix();
 
         // screen1
-        var screen1 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-        var material1 = new THREE.MeshBasicMaterial({ color: 0x070B0c });
-        var object1 = new THREE.Mesh( screen1, material1 );
+        var screen1 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+        var material1 = new THREE.MeshBasicMaterial({
+            color: 0x070B0c
+        });
+        var object1 = new THREE.Mesh(screen1, material1);
         object1.position.x = 0;
         object1.position.y = 5;
         object1.position.z = 20;
         object1.rotation.y += Math.PI;
-        scene.add( object1 );
-            
+        scene.add(object1);
+
         // screen2
-        var screen2 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-        var material2 = new THREE.MeshBasicMaterial({ color: 0x070B0c });
-        var object2 = new THREE.Mesh( screen2, material2 );
-        object2.position.x = 20 * Math.sin(Math.PI/2 * 72 / 90);
+        var screen2 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+        var material2 = new THREE.MeshBasicMaterial({
+            color: 0x070B0c
+        });
+        var object2 = new THREE.Mesh(screen2, material2);
+        object2.position.x = 20 * Math.sin(Math.PI / 2 * 72 / 90);
         object2.position.y = 5;
-        object2.position.z = 20 * Math.cos(Math.PI/2 * 72 / 90);
-        object2.rotation.y += Math.PI/2 * 72 / 90;
-        scene.add( object2 );
-            
+        object2.position.z = 20 * Math.cos(Math.PI / 2 * 72 / 90);
+        object2.rotation.y += Math.PI / 2 * 72 / 90;
+        scene.add(object2);
+
         // screen3
-        var screen3 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-        var material3 = new THREE.MeshBasicMaterial({ color: 0x070B0c });
-        var object3 = new THREE.Mesh( screen3, material3 );
-        object3.position.x = 20 * Math.sin(Math.PI/2 * 36 / 90);
+        var screen3 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+        var material3 = new THREE.MeshBasicMaterial({
+            color: 0x070B0c
+        });
+        var object3 = new THREE.Mesh(screen3, material3);
+        object3.position.x = 20 * Math.sin(Math.PI / 2 * 36 / 90);
         object3.position.y = 5;
-        object3.position.z = -1 * 20 * Math.cos(Math.PI/2 * 36 / 90);
-        object3.rotation.y += Math.PI/2 * 144 / 90;
-        scene.add( object3 );
+        object3.position.z = -1 * 20 * Math.cos(Math.PI / 2 * 36 / 90);
+        object3.rotation.y += Math.PI / 2 * 144 / 90;
+        scene.add(object3);
 
         // screen4
-        var screen4 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-        var material4 = new THREE.MeshBasicMaterial({ color: 0x070B0c });
-        var object4 = new THREE.Mesh( screen4, material4 );
-        object4.position.x = -1 * 20 * Math.sin(Math.PI/2 * 36 / 90);
+        var screen4 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+        var material4 = new THREE.MeshBasicMaterial({
+            color: 0x070B0c
+        });
+        var object4 = new THREE.Mesh(screen4, material4);
+        object4.position.x = -1 * 20 * Math.sin(Math.PI / 2 * 36 / 90);
         object4.position.y = 5;
-        object4.position.z = -1 * 20 * Math.cos(Math.PI/2 * 36 / 90);
-        object4.rotation.y += Math.PI/2 * 36 / 90;
-        scene.add( object4 );
+        object4.position.z = -1 * 20 * Math.cos(Math.PI / 2 * 36 / 90);
+        object4.rotation.y += Math.PI / 2 * 36 / 90;
+        scene.add(object4);
 
         // screen5
-        var screen5 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-        var material5 = new THREE.MeshBasicMaterial({ color: 0x070B0c });
-        var object5 = new THREE.Mesh( screen5, material5 );
-        object5.position.x = -1 * 20 * Math.sin(Math.PI/2 * 72 / 90);
+        var screen5 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+        var material5 = new THREE.MeshBasicMaterial({
+            color: 0x070B0c
+        });
+        var object5 = new THREE.Mesh(screen5, material5);
+        object5.position.x = -1 * 20 * Math.sin(Math.PI / 2 * 72 / 90);
         object5.position.y = 5;
-        object5.position.z = 20 * Math.cos(Math.PI/2 * 72 / 90);
-        object5.rotation.y += Math.PI/2 * 108 / 90;
-        scene.add( object5 );
+        object5.position.z = 20 * Math.cos(Math.PI / 2 * 72 / 90);
+        object5.rotation.y += Math.PI / 2 * 108 / 90;
+        scene.add(object5);
 
         function init() {
             if (VIDEO_1 === 0) {
                 var video1 = document.getElementById("video1");
-                if (typeof video1  == "undefined" || video1  == null || video1  == "") {
-                } else {
-                    scene.remove( object1 );
+                if (typeof video1 == "undefined" || video1 == null || video1 == "") {} else {
+                    scene.remove(object1);
 
-                    var screen1 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-                    var texture1 = new THREE.VideoTexture( video1 );
-                    var material1 = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture1 });
-                    var object1 = new THREE.Mesh( screen1, material1 );
+                    var screen1 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+                    var texture1 = new THREE.VideoTexture(video1);
+                    var material1 = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: texture1
+                    });
+                    var object1 = new THREE.Mesh(screen1, material1);
                     object1.position.x = 0;
                     object1.position.y = 5;
                     object1.position.z = 20;
                     object1.rotation.y += Math.PI;
-                    scene.add( object1 );
+                    scene.add(object1);
 
                     domEvents.addEventListener(object1, 'click', event => {
                         alert("screen1 click");
@@ -194,25 +218,27 @@
                     domEvents.addEventListener(object1, 'mouseout', event => {
                         document.body.style.cursor = "default";
                     });
-                    
+
                     VIDEO_1 = 1;
                 }
             }
             if (VIDEO_2 === 0) {
                 var video2 = document.getElementById("video3");
-                if (typeof video2  == "undefined" || video2  == null || video2  == "") {
-                } else {
-                    scene.remove( object2 );
+                if (typeof video2 == "undefined" || video2 == null || video2 == "") {} else {
+                    scene.remove(object2);
 
-                    var screen2 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-                    var texture2 = new THREE.VideoTexture( video2 );
-                    var material2 = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture2 });
-                    var object2 = new THREE.Mesh( screen2, material2 );
-                    object2.position.x = 20 * Math.sin(Math.PI/2 * 72 / 90);
+                    var screen2 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+                    var texture2 = new THREE.VideoTexture(video2);
+                    var material2 = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: texture2
+                    });
+                    var object2 = new THREE.Mesh(screen2, material2);
+                    object2.position.x = 20 * Math.sin(Math.PI / 2 * 72 / 90);
                     object2.position.y = 5;
-                    object2.position.z = 20 * Math.cos(Math.PI/2 * 72 / 90);
-                    object2.rotation.y += Math.PI/2 * 72 / 90;
-                    scene.add( object2 );
+                    object2.position.z = 20 * Math.cos(Math.PI / 2 * 72 / 90);
+                    object2.rotation.y += Math.PI / 2 * 72 / 90;
+                    scene.add(object2);
 
                     domEvents.addEventListener(object2, 'click', event => {
                         alert("screen2 click");
@@ -223,25 +249,27 @@
                     domEvents.addEventListener(object2, 'mouseout', event => {
                         document.body.style.cursor = "default";
                     });
-                    
+
                     VIDEO_2 = 1;
                 }
             }
             if (VIDEO_3 === 0) {
                 var video3 = document.getElementById("video5");
-                if (typeof video3  == "undefined" || video3  == null || video3  == "") {
-                } else {
-                    scene.remove( object3 );
+                if (typeof video3 == "undefined" || video3 == null || video3 == "") {} else {
+                    scene.remove(object3);
 
-                    var screen3 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-                    var texture3 = new THREE.VideoTexture( video3 );
-                    var material3 = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture3 });
-                    var object3 = new THREE.Mesh( screen3, material3 );
-                    object3.position.x = 20 * Math.sin(Math.PI/2 * 36 / 90);
+                    var screen3 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+                    var texture3 = new THREE.VideoTexture(video3);
+                    var material3 = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: texture3
+                    });
+                    var object3 = new THREE.Mesh(screen3, material3);
+                    object3.position.x = 20 * Math.sin(Math.PI / 2 * 36 / 90);
                     object3.position.y = 5;
-                    object3.position.z = -1 * 20 * Math.cos(Math.PI/2 * 36 / 90);
-                    object3.rotation.y += Math.PI/2 * 144 / 90;
-                    scene.add( object3 );
+                    object3.position.z = -1 * 20 * Math.cos(Math.PI / 2 * 36 / 90);
+                    object3.rotation.y += Math.PI / 2 * 144 / 90;
+                    scene.add(object3);
 
                     domEvents.addEventListener(object3, 'click', event => {
                         alert("screen3 click");
@@ -258,19 +286,21 @@
             }
             if (VIDEO_4 === 0) {
                 var video4 = document.getElementById("video7");
-                if (typeof video4  == "undefined" || video4  == null || video4  == "") {
-                } else {
-                    scene.remove( object4 );
+                if (typeof video4 == "undefined" || video4 == null || video4 == "") {} else {
+                    scene.remove(object4);
 
-                    var screen4 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-                    var texture4 = new THREE.VideoTexture( video4 );
-                    var material4 = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture4 });
-                    var object4 = new THREE.Mesh( screen4, material4 );
-                    object4.position.x = -1 * 20 * Math.sin(Math.PI/2 * 36 / 90);
+                    var screen4 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+                    var texture4 = new THREE.VideoTexture(video4);
+                    var material4 = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: texture4
+                    });
+                    var object4 = new THREE.Mesh(screen4, material4);
+                    object4.position.x = -1 * 20 * Math.sin(Math.PI / 2 * 36 / 90);
                     object4.position.y = 5;
-                    object4.position.z = -1 * 20 * Math.cos(Math.PI/2 * 36 / 90);
-                    object4.rotation.y += Math.PI/2 * 36 / 90;
-                    scene.add( object4 );
+                    object4.position.z = -1 * 20 * Math.cos(Math.PI / 2 * 36 / 90);
+                    object4.rotation.y += Math.PI / 2 * 36 / 90;
+                    scene.add(object4);
 
                     domEvents.addEventListener(object4, 'click', event => {
                         alert("screen4 click");
@@ -287,20 +317,22 @@
             }
             if (VIDEO_5 === 0) {
                 var video5 = document.getElementById("video9");
-                if (typeof video5  == "undefined" || video5  == null || video5  == "") {
-                } else {
-                    scene.remove( object5 );
+                if (typeof video5 == "undefined" || video5 == null || video5 == "") {} else {
+                    scene.remove(object5);
 
-                    var screen5 = new THREE.BoxBufferGeometry( 12, 9, 0.1 );
-                    var texture5 = new THREE.VideoTexture( video5 );
-                    var material5 = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture5 });
-                    var object5 = new THREE.Mesh( screen5, material5 );
-                    object5.position.x = -1 * 20 * Math.sin(Math.PI/2 * 72 / 90);
+                    var screen5 = new THREE.BoxBufferGeometry(12, 9, 0.1);
+                    var texture5 = new THREE.VideoTexture(video5);
+                    var material5 = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: texture5
+                    });
+                    var object5 = new THREE.Mesh(screen5, material5);
+                    object5.position.x = -1 * 20 * Math.sin(Math.PI / 2 * 72 / 90);
                     object5.position.y = 5;
-                    object5.position.z = 20 * Math.cos(Math.PI/2 * 72 / 90);
-                    object5.rotation.y += Math.PI/2 * 108 / 90;
-                    scene.add( object5 );
-                    
+                    object5.position.z = 20 * Math.cos(Math.PI / 2 * 72 / 90);
+                    object5.rotation.y += Math.PI / 2 * 108 / 90;
+                    scene.add(object5);
+
                     domEvents.addEventListener(object5, 'click', event => {
                         alert("screen5 click");
                     });
@@ -318,12 +350,26 @@
 
         function render() {
             init();
-            requestAnimationFrame( render );
+            requestAnimationFrame(render);
             controls.update();
-            renderer.render( scene, camera );
+            renderer.render(scene, camera);
         }
 
         render();
     </script>
+    <script>
+        function doNotReload() {
+            if ((event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) //ctrl+N , ctrl+R
+                ||
+                (event.keyCode == 116)) // function F5
+            {
+                event.keyCode = 0;
+                event.cancelBubble = true;
+                event.returnValue = false;
+            }
+        }
+        document.onkeydown = doNotReload;
+    </script>
 </body>
+
 </html>
