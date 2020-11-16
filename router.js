@@ -37,6 +37,20 @@ router.post("/message", (req, res) => {
     res.send();
 });
 
+router.post("/createUser", (req, res) => {
+    const {
+        body: { data },
+    } = req;
+
+    const newUser = UserModel.create({
+        socketID: data.socketID,
+        username: data.username,
+        connectedRoom: data.connectedRoom,
+        job: data.job,
+    });
+    res.send();
+});
+
 router.get("/:roomID/game", (req, res) => {
     const prevURL = req.headers.referer;
     const roomId = req.params.roomID;

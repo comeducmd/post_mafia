@@ -17,6 +17,33 @@ navigator.mediaDevices
     .then((stream) => {
         addVideoStream(myVideo, stream);
 
+
+        console.log("create new user in db");
+        localStorage.setItem("userSocket", myPeer._id);
+        const username = localStorage.getItem("username");
+        const roomID = localStorage.getItem("roomID")
+        const job = null; // 아직 어케 할지 모르겠다.
+
+        let newUserData = {
+            'socketID': myPeer._id,
+            'username': username,
+            'connectedRoom': roomID,
+            'job': job,
+        };
+        let reqCreateUser = $.ajax({
+            url: `/createUser`,
+            dataType: 'text',
+            type: 'POST',
+            data: {data:newUserData},
+        });
+
+        reqCreateUser.done(() => {
+            console.log('success');
+        });
+        reqCreateUser.fail(() => {
+            console.log('error');
+        });
+
         myPeer.on("call", (call) => {
             call.answer(stream);
 
@@ -28,10 +55,8 @@ navigator.mediaDevices
 
         socket.on("user-connected", (userId) => {
             console.log("User connected : " + userId);
-
             // user 연결 후 기다렸다가 동영상 로드
             setTimeout(() => {
-                createNewUser(userId);
                 connectToNewUser(userId, stream);
             }, 1000);
         });
@@ -48,19 +73,6 @@ socket.on("user-disconnected", (userId) => {
 myPeer.on("open", (id) => {
     socket.emit("join-room", ROOM_ID, id);
 });
-
-function createNewUser(userId) {
-    console.log("create new user in db");
-    localStorage.setItem("userSocket") = userId;
-    const username = localStorage.getItem("username")
-    const job = null; // 아직 어케 할지 모르겠다.
-    let newUserData = {
-        socketID: userId,
-        username: username,
-        job: job,
-    }
-    socket.emit("user-create", newUserData);
-}
 
 function connectToNewUser(userId, stream) {
     const call = myPeer.call(userId, stream);

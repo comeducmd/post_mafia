@@ -19,7 +19,6 @@ module.exports = (io) => {
             })
             socket.on("disconnect", () => {
                 socket.to(roomId).broadcast.emit("user-disconnected", userId);
-                UserModel.findOneAndDelete({ socketID: userId })
             });
         });
     });

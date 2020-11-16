@@ -14,10 +14,10 @@ const UserSchema = new Schema({
     //isHost: {
     //    type: Boolean,
     //},
-    //connectedRoom: {
-    //    type: mongoose.Schema.Types.ObjectId,
-    //    ref: "room"
-    //},
+    connectedRoom: {
+       type: mongoose.Schema.Types.ObjectId,
+       ref: "room"
+    },
     isAlive: {
         type: Boolean,
         default: true
