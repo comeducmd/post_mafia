@@ -22,13 +22,11 @@ navigator.mediaDevices
         localStorage.setItem("userSocket", myPeer._id);
         const username = localStorage.getItem("username");
         const roomID = localStorage.getItem("roomID")
-        const job = null; // 아직 어케 할지 모르겠다.
 
         let newUserData = {
             'socketID': myPeer._id,
             'username': username,
             'connectedRoom': roomID,
-            'job': job,
         };
         let reqCreateUser = $.ajax({
             url: `/createUser`,
