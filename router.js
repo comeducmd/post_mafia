@@ -63,7 +63,7 @@ router.post("/createUser", (req, res) =>  {
         shuffle(jobList);
         shuffle(jobList);
         jobList.forEach(async element => {
-            let uuuu = await UserModel.findOneAndUpdate({connectedRoom: c, job:"empty"}, {
+            let uuuu = await UserModel.findOneAndUpdate({connectedRoom: data.connectedRoom, job:"empty"}, {
                 job:element
             });
             console.log(c + "Room 직업 배분 : " + element);
