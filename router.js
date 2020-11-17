@@ -37,17 +37,38 @@ router.post("/message", (req, res) => {
     res.send();
 });
 
-router.post("/createUser", (req, res) => {
+router.post("/createUser", (req, res) =>  {
     const {
-        body: { data },
+        body: { data }
     } = req;
 
-    const newUser = UserModel.create({
+     const newUser = UserModel.create({
         socketID: data.socketID,
         username: data.username,
         connectedRoom: data.connectedRoom,
-        job: data.job,
+        job: "empty"
     });
+
+    shuffle = (arr) => {
+        arr.sort(() => Math.random() - Math.random());
+    }
+
+    const userNum = UserModel.find({
+        connectedRoom: data.connectedRoom
+    }).countDocuments();
+
+    if (userNum === 5) {
+        let jobList = ['citizen', 'citizen', 'police', 'doctor', 'mafia'];
+        shuffle(jobList);
+        shuffle(jobList);
+        shuffle(jobList);
+        jobList.forEach(async element => {
+            let uuuu = await UserModel.findOneAndUpdate({connectedRoom: c, job:"empty"}, {
+                job:element
+            });
+            console.log(c + "Room 직업 배분 : " + element);
+        });
+    }
     res.send();
 });
 
