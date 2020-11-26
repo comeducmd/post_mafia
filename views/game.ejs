@@ -24,7 +24,6 @@
     <script src="/socket.io/socket.io.js" defer></script>
     <script src="/scripts/jquery-3.5.1.js"></script>
     <script src="/scripts/game_client.js" defer></script>
-    <script src="/scripts/rlatjwls.js"></script>
     <title>Mafia</title>
     <style>
         body {
@@ -69,6 +68,7 @@
         var domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 
         // room
+
         var imageLoader = new THREE.TextureLoader();
         imageLoader.load("/img/side.jpg", data => {
             var material_room = new THREE.MeshBasicMaterial({
@@ -79,12 +79,85 @@
             var boxMesh = new THREE.Mesh(geometry_room, material_room);
             boxMesh.position.y += 32;
             scene.add(boxMesh)
+            console.log("image loaded");
         });
 
+        // clock
+        let group, textMesh1, textGeo, materialC;
+        let firstLetter = true;
+
+        let text = 'Day Time';
+        const height = 1, // Float. Thickness to extrude text. Default is 50.
+            size = 6, //Float. Size of the text. Default is 100.
+            hover = 8, //밑면과 거리?
+            curveSegments = 20, //Integer. Number of points on the curves. Default is 12. 글자가 동그래진다?
+            bevelThickness = 1, //Float. How deep into text bevel goes. Default is 10.
+            bevelSize = 0.4; //Float. How far from text outline is bevel. Default is 8.
+
+        let font = null;
+
+        materialC = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            flatShading: true
+        });
+
+        group = new THREE.Group();
+        group.position.x = 0
+        group.position.z = 0
+        group.position.y = 10;
+        scene.add(group);
+
+        const loader = new THREE.FontLoader();
+        loader.load("/fonts/Roboto_Regular.json", function(response) {
+            font = response;
+            createText();
+        })
+
+        function createText() {
+            textGeo = new THREE.TextBufferGeometry(text, {
+                font: font,
+                size: size,
+                height: height,
+                curveSegments: curveSegments,
+                bevelThickness: bevelThickness,
+                bevelSize: bevelSize,
+                bevelEnabled: true,
+                material: 0,
+                extrudeMaterial: 1
+            });
+
+            textGeo.computeBoundingBox();
+            textGeo.computeVertexNormals();
+
+            const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+
+            textMesh1 = new THREE.Mesh(textGeo, materialC);
+
+            textMesh1.position.x = centerOffset;
+            textMesh1.position.y = hover;
+            textMesh1.position.z = 0;
+
+            textMesh1.rotation.x = 0;
+            textMesh1.rotation.y = Math.PI * 2;
+
+            group.add(textMesh1);
+            console.log("text added to group");
+
+        }
+
+        function refreshText() {
+
+            group.remove(textMesh1);
+            if (!text) return;
+            createText();
+
+        }
+
+        // table
         function loadTableOBJ(materials) {
             var loader = new THREE.OBJLoader();
             loader.setMaterials(materials);
-            console.log(materials);
+            //console.log(materials);
             loader.load('/obj/table.obj', function(obj) {
                 obj.rotation.x -= Math.PI / 2;
                 obj.position.y = -13;
@@ -110,6 +183,7 @@
         }
         loadTableMTL();
 
+        // lights
         var spotLight = new THREE.SpotLight(0xffffff);
         spotLight.position.set(-35, 72, 80);
         spotLight.angle = 0.7;
@@ -118,7 +192,12 @@
         spotLight.decay = 2;
         spotLight.distance = 200;
         scene.add(spotLight);
-
+        /*
+                const pointLight = new THREE.PointLight(0xffffff, 1.5);
+                pointLight.position.set(200, 300, 200);
+                pointLight.color.setHSL(0.5, 1, 0.5);
+                scene.add(pointLight);
+        */
         // orbit controller
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.maxPolarAngle = Math.PI * 0.4;
@@ -348,6 +427,7 @@
                     VIDEO_5 = 1;
                 }
             }
+
         }
 
         function render() {
@@ -361,19 +441,37 @@
         }
 
         render();
+
+        const DayTimerStart = () => {
+            const StartTime = new Date().getTime()
+            const TimerProcess = setInterval(() => {
+                const PresentTime = new Date().getTime();
+                const RunTime = new Date(PresentTime - StartTime);
+                const RunSecond = RunTime.getMinutes() * 60 + RunTime.getSeconds();
+                const LeftSecond = 121 - RunSecond;
+                text = String(LeftSecond);
+                refreshText();
+                if (LeftSecond < 1) {
+                    clearInterval(TimerProcess);
+                    // 여기서 밤 되는 함수 실행
+                }
+            }, 1000)
+        }
+        DayTimerStart()
     </script>
     <script>
-        function doNotReload() {
-            if ((event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) //ctrl+N , ctrl+R
-                ||
-                (event.keyCode == 116)) // function F5
-            {
-                event.keyCode = 0;
-                event.cancelBubble = true;
-                event.returnValue = false;
-            }
-        }
-        document.onkeydown = doNotReload;
+        /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        function doNotReload() {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        if ((event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) //ctrl+N , ctrl+R
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ||
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            (event.keyCode == 116)) // function F5
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            event.keyCode = 0;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            event.cancelBubble = true;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            event.returnValue = false;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        document.onkeydown = doNotReload;*/
     </script>
 </body>
 
